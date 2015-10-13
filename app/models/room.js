@@ -33,18 +33,18 @@ var RoomSchema = new mongoose.Schema({
         trim: true
     },
     owner: {
-		type: ObjectId,
-		ref: 'User',
+        type: ObjectId,
+        ref: 'User',
         required: true
     },
     participants: [{ // We can have an array per role
-		type: ObjectId,
-		ref: 'User'
-	}],
-	messages: [{
-		type: ObjectId,
-		ref: 'Message'
-	}],
+        type: ObjectId,
+        ref: 'User'
+    }],
+    messages: [{
+        type: ObjectId,
+        ref: 'Message'
+    }],
     created: {
         type: Date,
         default: Date.now
@@ -184,10 +184,20 @@ RoomSchema.method('toJSON', function(user) {
         lastActive: room.lastActive,
         created: room.created,
         owner: room.owner,
+        participants: room.participants,
         private: room.private,
         hasPassword: this.hasPassword,
-        participants: []
     };
+
+    for(var i in data.participants){
+        var temp = data.participants[i];
+        data.participants[i] = {}
+        data.participants[i].username = temp.username;
+        data.participants[i].firstName = temp.firstName;
+        data.participants[i].lastName = temp.lastName;
+        data.participants[i].email = temp.email;
+        data.participants[i].id = temp.id;
+    }
 
     if (room.private && authorized) {
         var participants = this.participants || [];

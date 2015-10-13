@@ -44,4 +44,12 @@ UserManager.prototype.username = function(username, cb) {
     }, cb);
 };
 
+UserManager.prototype.rooms = function(identifier, cb) {
+    var User = mongoose.model('User');
+    var Room = mongoose.model('Room');
+    User.findById(mongoose.Types.ObjectId(identifier), function(err, user){
+        Room.find({'_id': { $in: user.rooms}}, cb)
+    });
+};
+
 module.exports = UserManager;

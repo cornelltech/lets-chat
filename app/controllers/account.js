@@ -304,21 +304,36 @@ module.exports = function() {
                             errors: err
                         });
                     }
-                    var temp = req.session.passport;
-                    req.session.regenerate(function(err) {
+
+                    // Generate a token for the user on login
+                    core.account.generateToken(req.user._id, function (err, token) {
                         if (err) {
-                            return res.status(400).json({
+                            return res.json({
                                 status: 'error',
-                                message: 'There were problems logging you in.',
+                                message: 'Unable to generate a token.',
                                 errors: err
                             });
                         }
-                        req.session.passport = temp;
-                        res.json({
-                            status: 'success',
-                            message: 'Logging you in...'
+
+                        var temp = req.session.passport;
+                        req.session.regenerate(function(err) {
+                            if (err) {
+                                return res.status(400).json({
+                                    status: 'error',
+                                    message: 'There were problems logging you in.',
+                                    errors: err
+                                });
+                            }
+                            req.session.passport = temp;
+                            res.json({
+                                status: 'success',
+                                message: 'Logged in and Token generated.',
+                                token: token
+                            });
                         });
+
                     });
+
                 });
             });
         }

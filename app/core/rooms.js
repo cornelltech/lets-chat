@@ -57,7 +57,23 @@ RoomManager.prototype.canJoin = function(options, cb) {
     });
 };
 
+RoomManager.prototype.join = function(options, cb) {
+    var Room = mongoose.model('Room');
+    var User = mongoose.model('User');
+    var roomID = options.roomID,
+        userID = options.userID;
+
+    Room.findByIdAndUpdate({_id: mongoose.Types.ObjectId(roomID)}, 
+        { $addToSet: {participants: userID}}, {}, function(err){
+            if(!err){
+                User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userID)}, 
+                                       { $addToSet: {rooms: roomID}}, {}, cb)
+            }
+        })
+};
+
 RoomManager.prototype.create = function(options, cb) {
+
     var Room = mongoose.model('Room');
     Room.create(options, function(err, room) {
         if (err) {

@@ -23,6 +23,10 @@ module.exports = function() {
         req.io.route('users:get');
     });
 
+    app.get('/users/:id/rooms', middlewares.requireLogin, function(req) {
+        req.io.route('users:rooms');
+    });
+
     //
     // Sockets
     //
@@ -57,6 +61,18 @@ module.exports = function() {
 
                 res.json(user);
             });
+        },
+        rooms: function(req, res) { 
+            var identifier = req.param('id');
+
+            core.users.rooms(identifier, function(err, rooms) {
+                if (err) {
+                    console.log(err);
+                    return res.status(400).json(err);
+                }
+
+                res.json(rooms);
+            });            
         }
     });
 };

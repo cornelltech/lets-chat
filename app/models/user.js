@@ -87,13 +87,13 @@ var UserSchema = new mongoose.Schema({
         trim: true
     },
     rooms: [{
-		type: ObjectId,
-		ref: 'Room'
+        type: ObjectId,
+        ref: 'Room'
     }],
-	messages: [{
-		type: ObjectId,
-		ref: 'Message'
-	}]
+    messages: [{
+        type: ObjectId,
+        ref: 'Message'
+    }]
 }, {
     toObject: {
         virtuals: true
