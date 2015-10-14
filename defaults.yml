@@ -54,7 +54,7 @@ auth:
     threshold: 3
   providers: [local] # [local, kerberos, ldap] - You can specify the order
   local:
-    enableRegistration: true
+    enableRegistration: false
     passwordRegex: ^.{8,64}$
 
 private:

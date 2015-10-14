@@ -9,7 +9,8 @@ var _ = require('lodash'),
     psjon = require('./../../package.json'),
     auth = require('./../auth/index'),
     path = require('path'),
-    settings = require('./../config');
+    settings = require('./../config'),
+    mongoose = require('mongoose');
 
 module.exports = function() {
 
@@ -55,6 +56,123 @@ module.exports = function() {
 
     app.post('/account/register', function(req) {
         req.io.route('account:register');
+    });
+
+    app.post('/internal/account/register',
+      middlewares.requireInternalToken,
+    function(req, res) {
+
+      // console.log(req.body);
+
+      var uid = req.body.uid;
+
+      var User = mongoose.model('User');
+
+      //check to see if we recognize the specified uid
+      //if we find a matching user, return successful
+      //otherwise, create a new user and generate a token
+      User.findOne({uid: uid}, function(err, user) {
+        if (err) {
+          return res.status(400).json({
+              status: 'error',
+              message: err
+          });
+        }
+        if (user) {
+          return res.status(200).json({status: 'success'});
+        }
+        else {
+
+          var data = {
+              provider: 'Lumbr',
+              uid: req.body.uid,
+              username: req.body.username,
+              email: req.body.email,
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              displayName: req.body.displayName
+          };
+
+          core.account.create('Lumbr', data, function(err, user) {
+              if (err) {
+                  var message = 'Sorry, we could not process your request';
+                  // User already exists
+                  if (err.code === 11000) {
+                      message = 'Email has already been taken';
+                  }
+                  // Invalid username
+                  if (err.errors) {
+                      message = _.map(err.errors, function(error) {
+                          return error.message;
+                      }).join(' ');
+                  // If all else fails...
+                  } else {
+                      console.error(err);
+                  }
+                  // Notify
+                  return res.status(400).json({
+                      status: 'error',
+                      message: message
+                  });
+              }
+
+              else {
+                return core.account.generateToken(user._id, function (err, token) {
+                    if (err) {
+                      var User = mongoose.model('User');
+                      User.findByIdAndRemove(user._id, function(err, user){
+                        return res.json({
+                            status: 'error',
+                            message: 'Unable to generate a token.',
+                            errors: err
+                        });
+                      });
+                    }
+
+                    return res.status(201).json({status: 'success',});
+                });
+              }
+
+          });
+        }
+      });
+    });
+
+    app.get('/internal/account/token',
+      middlewares.requireInternalToken,
+    function(req, res) {
+
+      var uid = req.query.uid;
+      console.log(req.query);
+
+      if (!uid) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'must provide uid'
+        });
+      }
+
+
+      var User = mongoose.model('User');
+      User.findOne({uid: uid}, function(err, user) {
+        console.log(user);
+        if (err) {
+          return res.status(400).json({
+              status: 'error',
+              message: err
+          });
+        }
+        if (!user) {
+          return res.status(404).json({
+              status: 'Not Found',
+              message: 'Could not find a user with the specified uid'
+          });
+        }
+        else {
+          return res.json({token: user.token});
+        }
+      })
+
     });
 
     app.get('/account', middlewares.requireLogin, function(req) {

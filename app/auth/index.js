@@ -58,6 +58,27 @@ function setup(app, session, core) {
     passport.use(new BearerStrategy(tokenAuth));
     passport.use(new BasicStrategy(tokenAuth));
 
+    function internalTokenAuth(token, callback) {
+
+        console.log('Checking token auth');
+        console.log(token);
+
+        for (var key in settings.services) {
+          if (settings.services.hasOwnProperty(key)) {
+            var serviceName = key;
+            var serviceConfig = settings.services[key];
+            if (serviceConfig.Token === token) {
+              console.log('Found matching token');
+              console.log(serviceName);
+              return callback(null, serviceName);
+            }
+          }
+        }
+        return callback(null, false);
+    }
+
+    passport.use('internal-bearer', new BearerStrategy(internalTokenAuth))
+
     passport.serializeUser(function(user, done) {
         done(null, user._id);
     });
