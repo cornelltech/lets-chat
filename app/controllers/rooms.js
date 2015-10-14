@@ -108,6 +108,12 @@ module.exports = function() {
             req.io.route('rooms:archive');
         });
 
+    app.route('/rooms/:room/join')
+        .all(middlewares.requireLogin, middlewares.roomRoute)
+        .post(function(req) {
+            req.io.route('rooms:join');
+        });
+
     app.route('/rooms/:room/users')
         .all(middlewares.requireLogin, middlewares.roomRoute)
         .get(function(req) {
@@ -166,6 +172,7 @@ module.exports = function() {
                 name: req.param('name'),
                 slug: req.param('slug'),
                 description: req.param('description'),
+                participants: [ req.user._id ],
                 private: req.param('private'),
                 password: req.param('password')
             };
@@ -180,7 +187,6 @@ module.exports = function() {
                     console.error(err);
                     return res.status(400).json(err);
                 }
-
                 res.status(201).json(room.toJSON(req.user));
             });
         },
@@ -243,36 +249,22 @@ module.exports = function() {
                 options.password = req.param('password');
             }
 
-            core.rooms.canJoin(options, function(err, room, canJoin) {
-                if (err) {
-                    console.error(err);
+            var user = req.user.toJSON();
+            var userID = req.param('userID') || req.user._id;
+
+            core.rooms.join({roomID: req.param('room'), userID: userID}, function(err) {
+                if( err ){
+                    console.log('there was an error joining')
+                    console.log(err)
                     return res.sendStatus(400);
                 }
-
-                if (!room) {
-                    return res.sendStatus(404);
-                }
-
-                if(!canJoin && room.password) {
-                    return res.status(403).json({
-                        status: 'error',
-                        roomName: room.name,
-                        message: 'password required',
-                        errors: 'password required'
-                    });
-                }
-
-                if(!canJoin) {
-                    return res.sendStatus(404);
-                }
-
-                var user = req.user.toJSON();
-                user.room = room._id;
-
-                core.presence.join(req.socket.conn, room);
-                req.socket.join(room._id);
-                res.json(room.toJSON(req.user));
+                var options = {
+                    userId: req.user._id,
+                    identifier: req.param('room') || req.param('id')
+                };
+                return res.sendStatus(200)
             });
+
         },
         leave: function(req, res) {
             var roomId = req.data;
