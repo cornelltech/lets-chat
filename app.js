@@ -216,6 +216,8 @@ function startApp() {
 
     app.listen(port, host);
 
+    console.log(settings);
+
     //
     // XMPP
     //

@@ -46,6 +46,16 @@ var pipeline = [
         }
     },
 
+    function getCommonSettings(context) {
+        var file;
+        if (fs.existsSync('common.yml')) {
+            file = fs.readFileSync('common.yml', 'utf8');
+            context.file = yaml.safeLoad(file) || {};
+        } else {
+            context.file = {};
+        }
+    },
+
     function getFilePlugin(context) {
         var provider = process.env.LCB_FILES_PROVIDER ||
                       context.file.files && context.file.files.provider ||
