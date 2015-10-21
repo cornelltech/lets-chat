@@ -100,6 +100,18 @@ app.use(helmet.contentSecurityPolicy({
     imgSrc: ['*']
 }));
 
+//is this the right way to fix the issue of the options request
+//not having authentication info????
+app.use(function(req, res, next){
+
+    if (req.method=='OPTIONS'){
+        res.sendStatus(200);
+    }
+    else{
+        next();
+    } // Continue with the process
+});
+
 var bundles = {};
 app.use(require('connect-assets')({
     paths: [
