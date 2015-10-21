@@ -30,6 +30,9 @@ xmpp:
     key: ./server.key
     cert: ./server.crt
 
+cors:
+  ALLOWED_ORIGINS: '*'
+
 database:
   uri: mongodb://localhost/letschat
 
