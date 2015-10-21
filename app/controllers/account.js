@@ -169,7 +169,7 @@ module.exports = function() {
           });
         }
         else {
-          return res.json({token: user.token});
+          return res.json({token: user.bearerToken});
         }
       })
 

@@ -50,6 +50,11 @@ var UserSchema = new mongoose.Schema({
             return this.password;
         }
     },
+    bearerToken: {
+      type: String,
+      required: false,
+      trim: true
+    },
     token: {
         type: String,
         required: false,
@@ -159,6 +164,7 @@ UserSchema.methods.generateToken = function(cb) {
                 this._id.toString() + ':' + password
             ).toString('base64');
 
+            this.bearerToken = userToken;
             cb(null, userToken);
 
         }.bind(this));
@@ -174,6 +180,9 @@ UserSchema.statics.findByToken = function(token, cb) {
     var tokenParts = new Buffer(token, 'base64').toString('ascii').split(':'),
         userId = tokenParts[0],
         hash = tokenParts[1];
+
+    console.log('found userid');
+    console.log(userId);
 
     if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
         cb(null, null);

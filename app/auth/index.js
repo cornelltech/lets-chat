@@ -48,6 +48,9 @@ function setup(app, session, core) {
         }
 
         var User = mongoose.model('User');
+
+
+        console.log(username);
         User.findByToken(username, function(err, user) {
             if (err) { return done(err); }
             if (!user) { return done(null, false); }

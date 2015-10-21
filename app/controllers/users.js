@@ -15,7 +15,9 @@ module.exports = function() {
     //
     // Routes
     //
-    app.get('/users', middlewares.requireLogin, function(req) {
+
+    // app.get('/users', middlewares.requireLogin, function(req) {
+    app.get('/users', function(req) {
         req.io.route('users:list');
     });
 
@@ -62,7 +64,7 @@ module.exports = function() {
                 res.json(user);
             });
         },
-        rooms: function(req, res) { 
+        rooms: function(req, res) {
             var identifier = req.param('id');
 
             core.users.rooms(identifier, function(err, rooms) {
@@ -72,7 +74,7 @@ module.exports = function() {
                 }
 
                 res.json(rooms);
-            });            
+            });
         }
     });
 };
