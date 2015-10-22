@@ -9,7 +9,8 @@
     "stop": "pkill --signal SIGINT letschat",
     "prestart": "migroose",
     "migrate": "migroose",
-    "test": "eslint ."
+    "test": "eslint .",
+    "start:dev": "nodemon --exec npm start"
   },
   "engine": {
     "node": "0.10.x",
@@ -98,6 +99,7 @@
     "grunt": "~0.4.5",
     "grunt-bower": "~0.20.0",
     "grunt-bower-task": "~0.4.0",
-    "eslint": "^1.5.0"
+    "eslint": "^1.5.0",
+    "nodemon": "latest"
   }
 }
