@@ -202,8 +202,9 @@ RoomSchema.method('toJSON', function(user) {
     if (room.private && authorized) {
         var participants = this.participants || [];
         data.participants = participants.map(function(user) {
-            return user.username ? user.username : user;
+            return user.uid ? user.uid : user;
         });
+        data.owner = data.owner.uid;
     }
 
     if (this.users) {

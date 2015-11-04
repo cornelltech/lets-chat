@@ -5,6 +5,7 @@
 'use strict';
 
 var settings = require('./../config').rooms;
+var mongoose = require('mongoose');
 
 module.exports = function() {
     var app = this.app,
@@ -88,11 +89,11 @@ module.exports = function() {
     // Routes
     //
     app.route('/rooms')
-        .all(middlewares.requireLogin)
-        .get(function(req) {
+        .get(middlewares.requireLogin, function(req) {
             req.io.route('rooms:list');
         })
-        .post(function(req) {
+        .post(middlewares.requireInternalToken,
+            function(req) {
             req.io.route('rooms:create');
         });
 
@@ -109,7 +110,7 @@ module.exports = function() {
         });
 
     app.route('/rooms/:room/join')
-        .all(middlewares.requireLogin, middlewares.roomRoute)
+        .all(middlewares.requireInternalToken, middlewares.roomRoute)
         .post(function(req) {
             req.io.route('rooms:join');
         });
@@ -166,29 +167,92 @@ module.exports = function() {
                 res.json(room.toJSON(req.user));
             });
         },
+        // create: function(req, res) {
+        //     var options = {
+        //         owner: req.user._id,
+        //         name: req.param('name'),
+        //         slug: req.param('slug'),
+        //         description: req.param('description'),
+        //         participants: [ req.user._id ],
+        //         private: req.param('private'),
+        //         password: req.param('password')
+        //     };
+        //
+        //     if (!settings.private) {
+        //         options.private = false;
+        //         delete options.password;
+        //     }
+        //
+        //     core.rooms.create(options, function(err, room) {
+        //         if (err) {
+        //             console.error(err);
+        //             return res.status(400).json(err);
+        //         }
+        //         res.status(201).json(room.toJSON(req.user));
+        //     });
+        // },
         create: function(req, res) {
-            var options = {
-                owner: req.user._id,
-                name: req.param('name'),
-                slug: req.param('slug'),
-                description: req.param('description'),
-                participants: [ req.user._id ],
-                private: req.param('private'),
-                password: req.param('password')
-            };
 
-            if (!settings.private) {
-                options.private = false;
-                delete options.password;
-            }
+            var User = mongoose.model('User');
+            //note that ownerUID
+            var ownerUID = req.param('owner');
+            var participantUIDs = req.param('participants');
 
-            core.rooms.create(options, function(err, room) {
+            return User.findOne({uid: ownerUID}, function(err, user) {
+
+              if (err) {
+                  console.error(err);
+                  return res.status(400).json(err);
+              }
+
+              if (!user) {
+                  // console.error(err);
+                  return res.sendStatus(404);
+              }
+
+              var owner = user._id;
+
+              return User.find({uid: {$in: participantUIDs}}, function(err, participantObjects) {
+
                 if (err) {
                     console.error(err);
                     return res.status(400).json(err);
                 }
-                res.status(201).json(room.toJSON(req.user));
+
+                if (participantObjects.length == 0) {
+                  return res.sendStatus(404);
+                }
+
+                var participants = participantObjects.map(function(participant) {
+                    return participant._id;
+                });
+
+                var options = {
+                    owner: owner,
+                    name: req.param('name'),
+                    slug: req.param('slug'),
+                    description: req.param('description'),
+                    participants: participants,
+                    private: true,
+                    password: req.param('password')
+                };
+
+                if (!settings.private) {
+                    options.private = false;
+                    delete options.password;
+                }
+
+                core.rooms.create(options, function(err, room) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(400).json(err);
+                    }
+                    res.status(201).json(room.toJSON(req.user));
+                });
+
             });
+          });
+
         },
         update: function(req, res) {
             var roomId = req.param('room') || req.param('id');

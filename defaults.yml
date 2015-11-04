@@ -74,7 +74,7 @@ giphy:
   apiKey: dc6zaTOxFJmzC
 
 rooms:
-  private: false
+  private: true
 
 i18n:
   locale: en

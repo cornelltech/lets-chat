@@ -63,10 +63,10 @@ RoomManager.prototype.join = function(options, cb) {
     var roomID = options.roomID,
         userID = options.userID;
 
-    Room.findByIdAndUpdate({_id: mongoose.Types.ObjectId(roomID)}, 
+    Room.findByIdAndUpdate({_id: mongoose.Types.ObjectId(roomID)},
         { $addToSet: {participants: userID}}, {}, function(err){
             if(!err){
-                User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userID)}, 
+                User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userID)},
                                        { $addToSet: {rooms: roomID}}, {}, cb)
             }
         })
@@ -75,6 +75,7 @@ RoomManager.prototype.join = function(options, cb) {
 RoomManager.prototype.create = function(options, cb) {
 
     var Room = mongoose.model('Room');
+    console.log(options);
     Room.create(options, function(err, room) {
         if (err) {
             return cb(err);
@@ -205,6 +206,7 @@ RoomManager.prototype.list = function(options, cb) {
     }
 
     find.populate('participants');
+    find.populate('owner');
 
     find.exec(function(err, rooms) {
         if (err) {
