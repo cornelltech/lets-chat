@@ -141,7 +141,11 @@ module.exports = function() {
                     return res.status(400).json(err);
                 }
 
-                var results = rooms.map(function(room) {
+                var filteredRooms = rooms.filter(function(room) {
+                  return room.isAuthorized(req.user._id);
+                });
+
+                var results = filteredRooms.map(function(room) {
                     return room.toJSON(req.user);
                 });
 
