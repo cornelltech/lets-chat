@@ -97,15 +97,32 @@ module.exports = function() {
             req.io.route('rooms:create');
         });
 
+
+      app.route('/rooms/join')
+          .all(middlewares.requireInternalToken)
+          .post(function(req) {
+            console.log('joining all rooms route');
+              req.io.route('rooms:join_all');
+          })
+
+      app.route('/rooms/leave')
+          .all(middlewares.requireInternalToken)
+          .post(function(req) {
+              req.io.route('rooms:leave_all');
+          })
+
     app.route('/rooms/:room')
-        .all(middlewares.requireLogin, middlewares.roomRoute)
-        .get(function(req) {
+        .all(middlewares.roomRoute)
+        .get(middlewares.requireLogin,
+          function(req) {
             req.io.route('rooms:get');
         })
-        .put(function(req) {
+        .put(middlewares.requireLogin,
+          function(req) {
             req.io.route('rooms:update');
         })
-        .delete(function(req) {
+        .delete(middlewares.requireInternalToken,
+          function(req) {
             req.io.route('rooms:archive');
         });
 
@@ -113,7 +130,26 @@ module.exports = function() {
         .all(middlewares.requireInternalToken, middlewares.roomRoute)
         .post(function(req) {
             req.io.route('rooms:join');
-        });
+        })
+
+    app.route('/rooms/:room/leave')
+        .all(middlewares.requireInternalToken, middlewares.roomRoute)
+        .post(function(req) {
+            req.io.route('rooms:leave');
+        })
+
+    // app.route('/rooms/join')
+    //     .all(middlewares.requireInternalToken, middlewares.roomRoute)
+    //     .post(function(req) {
+    //         console.log('joining all rooms route');
+    //         req.io.route('rooms:join_all');
+    //     })
+    //
+    // app.route('/rooms/leave')
+    //     .all(middlewares.requireInternalToken, middlewares.roomRoute)
+    //     .post(function(req) {
+    //         req.io.route('rooms:leave_all');
+    //     })
 
     app.route('/rooms/:room/users')
         .all(middlewares.requireLogin, middlewares.roomRoute)
@@ -197,6 +233,8 @@ module.exports = function() {
         // },
         create: function(req, res) {
 
+
+          console.log('CREATING ROOM!!!');
             var User = mongoose.model('User');
             //note that ownerUID
             var ownerUID = req.param('owner');
@@ -291,6 +329,8 @@ module.exports = function() {
         archive: function(req, res) {
             var roomId = req.param('room') || req.param('id');
 
+            // console.log(roomId);
+
             core.rooms.archive(roomId, function(err, room) {
                 if (err) {
                     console.log(err);
@@ -298,50 +338,180 @@ module.exports = function() {
                 }
 
                 if (!room) {
+                    //should this be 404 or 200?
                     return res.sendStatus(404);
                 }
 
                 res.sendStatus(204);
             });
         },
+        // join: function(req, res) {
+        //     var options = {
+        //             userId: req.user._id,
+        //             saveMembership: true
+        //         };
+        //
+        //     if (typeof req.data === 'string') {
+        //         options.id = req.data;
+        //     } else {
+        //         options.id = req.param('roomId');
+        //         options.password = req.param('password');
+        //     }
+        //
+        //     var user = req.user.toJSON();
+        //     var userID = req.param('userID') || req.user._id;
+        //
+        //     core.rooms.join({roomID: req.param('room'), userID: userID}, function(err) {
+        //         if( err ){
+        //             console.log('there was an error joining')
+        //             console.log(err)
+        //             return res.sendStatus(400);
+        //         }
+        //         var options = {
+        //             userId: req.user._id,
+        //             identifier: req.param('room') || req.param('id')
+        //         };
+        //         return res.sendStatus(200)
+        //     });
+        //
+        // },
         join: function(req, res) {
-            var options = {
-                    userId: req.user._id,
-                    saveMembership: true
-                };
+          var roomID = req.param('room');
+          var userUID = req.body.uid;
 
-            if (typeof req.data === 'string') {
-                options.id = req.data;
-            } else {
-                options.id = req.param('roomId');
-                options.password = req.param('password');
+          return User.findOne({uid: userUID}, function(err, user) {
+
+            if( err ){
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
             }
 
-            var user = req.user.toJSON();
-            var userID = req.param('userID') || req.user._id;
+            else if (!user) {
 
-            core.rooms.join({roomID: req.param('room'), userID: userID}, function(err) {
-                if( err ){
-                    console.log('there was an error joining')
-                    console.log(err)
-                    return res.sendStatus(400);
-                }
-                var options = {
-                    userId: req.user._id,
-                    identifier: req.param('room') || req.param('id')
-                };
-                return res.sendStatus(200)
-            });
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
+            }
 
+            else {
+              return core.rooms.join({roomID: roomID, userID: user._id}, function(err) {
+                  if( err ){
+                      console.log('there was an error joining')
+                      console.log(err)
+                      return res.status(400).send({error: 'there was an error joining'});
+                  }
+
+                  return res.sendStatus(200)
+              });
+            }
+
+
+          });
         },
-        leave: function(req, res) {
-            var roomId = req.data;
-            var user = req.user.toJSON();
-            user.room = roomId;
+        join_all: function(req, res) {
+          var userUID = req.body.uid;
 
-            core.presence.leave(req.socket.conn, roomId);
-            req.socket.leave(roomId);
-            res.json();
+          console.log('joining all rooms route');
+          return User.findOne({uid: userUID}, function(err, user) {
+
+            if( err ){
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
+            }
+
+            else if (!user) {
+
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
+            }
+
+            else {
+              return core.rooms.join_all({userID: user._id}, function(err) {
+                  if( err ){
+                      console.log('there was an error joining')
+                      console.log(err)
+                      return res.status(400).send({error: 'there was an error joining'});
+                  }
+
+                  return res.sendStatus(200)
+              });
+            }
+
+
+          });
+        },
+
+        leave: function(req, res) {
+          var roomID = req.param('room');
+          var userUID = req.body.uid;
+
+          return User.findOne({uid: userUID}, function(err, user) {
+
+            if( err ){
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
+            }
+
+            else if (!user) {
+
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
+            }
+
+            else {
+              return core.rooms.leave({roomID: roomID, userID: user._id}, function(err) {
+                  if( err ){
+                      console.log('there was an error leaving')
+                      console.log(err)
+                      return res.sendStatus(400);
+                  }
+
+                  return res.sendStatus(200);
+              });
+            }
+
+
+
+          });
+        },
+        leave_all: function(req, res) {
+          var userUID = req.body.uid;
+
+          return User.findOne({uid: userUID}, function(err, user) {
+
+            if( err ){
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
+            }
+
+            else if (!user) {
+
+                console.log('No user with the specified UID found')
+                console.log(err)
+                return res.status(400).send({error: 'No user with the specified UID found'});
+            }
+
+            else {
+              return core.rooms.leave_all({userID: user._id}, function(err) {
+                  if( err ){
+                      console.log('there was an error leaving')
+                      console.log(err)
+                      return res.sendStatus(400);
+                  }
+
+                  return res.sendStatus(200);
+              });
+            }
+
+
+
+          });
         },
         users: function(req, res) {
             var roomId = req.param('room');

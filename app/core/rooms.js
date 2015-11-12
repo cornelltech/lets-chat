@@ -63,13 +63,122 @@ RoomManager.prototype.join = function(options, cb) {
     var roomID = options.roomID,
         userID = options.userID;
 
-    Room.findByIdAndUpdate({_id: mongoose.Types.ObjectId(roomID)},
-        { $addToSet: {participants: userID}}, {}, function(err){
+    return Room.findByIdAndUpdate(mongoose.Types.ObjectId(roomID),
+        { $addToSet: {participants: mongoose.Types.ObjectId(userID)}}, function(err){
             if(!err){
-                User.findByIdAndUpdate({_id: mongoose.Types.ObjectId(userID)},
-                                       { $addToSet: {rooms: roomID}}, {}, cb)
+                return User.findByIdAndUpdate(mongoose.Types.ObjectId(userID),
+                                       { $addToSet: {rooms: mongoose.Types.ObjectId(roomID)}}, cb)
+            }
+            else {
+              return cb(err);
             }
         })
+};
+
+RoomManager.prototype.join_all = function(options, cb) {
+
+    console.log('joining all rooms core');
+    var Room = mongoose.model('Room');
+
+    var roomManager = this;
+
+    return Room.find({}, function(err, rooms) {
+
+      if(err) {
+        return cb(err, false);
+      }
+      function join_all_helper(i, callback) {
+
+        console.log('join_all_rooms_helper')
+        if (i < rooms.length) {
+          var room = rooms[i];
+          return roomManager.join({userID: options.userID, roomID: room._id}, function(err, room) {
+            if(err) {
+              return callback(err, false);
+            }
+            else {
+              return join_all_helper(i+1, callback);
+            }
+          })
+        }
+        else {
+          console.log('joined all rooms core');
+          return callback(null)
+        }
+      }
+
+      return join_all_helper(0, cb);
+
+    });
+
+};
+
+RoomManager.prototype.leave = function(options, cb) {
+    var Room = mongoose.model('Room');
+    var User = mongoose.model('User');
+    var roomID = options.roomID,
+        userID = options.userID;
+
+        //probably should check that the user is not the
+        return Room.findById(roomID, function(err, room) {
+
+          if (err) {
+            return cb(err);
+          }
+          else if (!room) {
+            return cb({error: 'Cannot find room'});
+          }
+          else if (room.owner.toString() === userID.toString()) {
+            return cb({error: 'Owner cannot leave'});
+          }
+
+          else {
+            return Room.findByIdAndUpdate(mongoose.Types.ObjectId(roomID),
+              { $pull: {participants: mongoose.Types.ObjectId(userID)}}, function(err){
+                  if(!err){
+                      User.findByIdAndUpdate(mongoose.Types.ObjectId(userID),
+                                             { $pull: {rooms: mongoose.Types.ObjectId(roomID)}}, cb)
+                  }
+                  else {
+                    cb(err);
+                  }
+              });
+            }
+        });
+};
+
+RoomManager.prototype.leave_all = function(options, cb) {
+
+    var Room = mongoose.model('Room');
+
+    var roomManager = this;
+
+    return Room.find({ archived: { $ne: true }}, function(err, rooms) {
+
+      if(err) {
+        return cb(err, false);
+      }
+      function leave_all_helper(i, callback) {
+        if (i < rooms.length) {
+          var room = rooms[i];
+          return roomManager.leave({userID: options.userID, roomID: room._id}, function(err, room) {
+            if(err) {
+              return callback(err, false);
+            }
+            else {
+              return leave_all_helper(i+1, callback);
+            }
+          })
+        }
+        else {
+          return callback(null)
+        }
+      }
+
+      return leave_all_helper(0, cb);
+
+    });
+
 };
 
 RoomManager.prototype.create = function(options, cb) {
