@@ -280,7 +280,8 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        avatar: this.avatar
+        avatar: this.avatar,
+        uid: this.uid
     };
 });
 
