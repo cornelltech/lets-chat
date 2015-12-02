@@ -32,6 +32,11 @@ UserManager.prototype.list = function(options, cb) {
     find.exec(cb);
 };
 
+UserManager.prototype.findByIds = function(ids, cb) {
+    var User = mongoose.model('User');
+    User.find({_id: { $in: ids}}, cb);
+};
+
 UserManager.prototype.get = function(identifier, cb) {
     var User = mongoose.model('User');
     User.findById(identifier, cb);

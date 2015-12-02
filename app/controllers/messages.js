@@ -4,6 +4,8 @@
 
 'use strict';
 
+var notificationClient = require('../clients/notificationService');
+
 module.exports = function() {
 
     var app = this.app,
@@ -17,6 +19,21 @@ module.exports = function() {
 
         app.io.to(room.id)
               .emit('messages:new', msg);
+    });
+
+    core.on('messages:new', function(message, room, user) {
+
+        core.users.findByIds(room.participants, function(error, participants) {
+          var uids = participants.map(function(participant) {
+            return participant.uid;
+          });
+
+          notificationClient.sendNotification(uids, "You've got a new message", function(error, response) {
+            console.log(error);
+            console.log(response);
+          });
+        });
+
     });
 
     //
