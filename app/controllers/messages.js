@@ -76,6 +76,10 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
+
+          console.log('headers')
+          console.log(req.headers);
+
             var options = {
                     userId: req.user._id,
                     password: req.param('password'),
@@ -91,6 +95,8 @@ module.exports = function() {
                     expand: req.param('expand')
                 };
 
+            console.log('options');
+            console.log(options)
             core.messages.list(options, function(err, messages) {
                 if (err) {
                     return res.sendStatus(400);
