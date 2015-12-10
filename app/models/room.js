@@ -132,13 +132,19 @@ RoomSchema.method('canJoin', function(options, cb) {
         password = options.password,
         saveMembership = options.saveMembership;
 
+    console.log('in canJoin')
     if (this.isAuthorized(userId)) {
+        console.log('user is authorized!')
         return cb(null, true);
     }
+
+    console.log('user is not authorized, continuting....')
 
     if (!this.password) {
         return cb(null, false);
     }
+
+    console.log('about to compare password')
 
     bcrypt.compare(password || '', this.password, function(err, isMatch) {
         if(err) {

@@ -106,7 +106,7 @@ module.exports = function() {
                     return message.toJSON(req.user);
                 });
 
-                res.json(messages);
+                return res.json(messages);
             });
         }
     });

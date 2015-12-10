@@ -59,10 +59,12 @@ MessageManager.prototype.list = function(options, cb) {
 
     options = options || {};
 
+    console.log('in messages list')
     if (!options.room) {
         return cb(null, []);
     }
 
+    console.log('about to sanitize query')
     options = helpers.sanitizeQuery(options, {
         defaults: {
             reverse: true,
@@ -115,7 +117,14 @@ MessageManager.prototype.list = function(options, cb) {
         find.sort({ 'posted': 1 });
     }
 
+    console.log('about to find room by id')
+    console.log(options.room)
+
     Room.findById(options.room, function(err, room) {
+      console.log('in find room by id callback')
+      console.log(err)
+      console.log(room)
+
         if (err) {
             console.error(err);
             return cb(err);
@@ -126,7 +135,9 @@ MessageManager.prototype.list = function(options, cb) {
             password: options.password
         };
 
+        console.log('about to check can join')
         room.canJoin(opts, function(err, canJoin) {
+          console.log('in can join callback')
             if (err) {
                 console.error(err);
                 return cb(err);
@@ -142,7 +153,7 @@ MessageManager.prototype.list = function(options, cb) {
                         console.error(err);
                         return cb(err);
                     }
-                    cb(null, messages);
+                    return cb(null, messages);
                 });
         });
     });
