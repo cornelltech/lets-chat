@@ -102,9 +102,14 @@ module.exports = function() {
                     return res.sendStatus(400);
                 }
 
+                console.log('found messages')
+                console.log(messages)
+                console.log('mapping messages');
                 messages = messages.map(function(message) {
                     return message.toJSON(req.user);
                 });
+
+                console.log(messages);
 
                 return res.json(messages);
             });
