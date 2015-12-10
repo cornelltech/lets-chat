@@ -138,6 +138,9 @@ MessageManager.prototype.list = function(options, cb) {
         console.log('about to check can join')
         room.canJoin(opts, function(err, canJoin) {
           console.log('in can join callback')
+          console.log(err);
+          console.log(canJoin);
+
             if (err) {
                 console.error(err);
                 return cb(err);
@@ -147,8 +150,11 @@ MessageManager.prototype.list = function(options, cb) {
                 return cb(null, []);
             }
 
+            console.log('about to find')
+            console.log(options)
             find.limit(options.take)
                 .exec(function(err, messages) {
+                    console.log('in find callback')
                     if (err) {
                         console.error(err);
                         return cb(err);
