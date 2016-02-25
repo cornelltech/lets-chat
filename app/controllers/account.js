@@ -142,8 +142,8 @@ module.exports = function() {
       middlewares.requireInternalToken,
     function(req, res) {
 
-      var uid = req.query.uid;
-      console.log(req.query);
+      // var uid = req.query.uid;
+      // console.log(req.query);
 
       if (!uid) {
         return res.status(400).json({
@@ -155,7 +155,7 @@ module.exports = function() {
 
       var User = mongoose.model('User');
       User.findOne({uid: uid}, function(err, user) {
-        console.log(user);
+        // console.log(user);
         if (err) {
           return res.status(400).json({
               status: 'error',

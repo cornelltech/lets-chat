@@ -13,7 +13,7 @@ function sendNotification(uids, text, callback) {
       }
     };
 
-    console.log('sending a message');
+    // console.log('sending a message');
 
     request({
       method: 'POST',

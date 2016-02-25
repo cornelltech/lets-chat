@@ -89,7 +89,7 @@ RoomManager.prototype.join_all = function(options, cb) {
       }
       function join_all_helper(i, callback) {
 
-        console.log('join_all_rooms_helper')
+        // console.log('join_all_rooms_helper')
         if (i < rooms.length) {
           var room = rooms[i];
           return roomManager.join({userID: options.userID, roomID: room._id}, function(err, room) {
@@ -102,7 +102,7 @@ RoomManager.prototype.join_all = function(options, cb) {
           })
         }
         else {
-          console.log('joined all rooms core');
+          // console.log('joined all rooms core');
           return callback(null)
         }
       }
@@ -184,7 +184,7 @@ RoomManager.prototype.leave_all = function(options, cb) {
 RoomManager.prototype.create = function(options, cb) {
 
     var Room = mongoose.model('Room');
-    console.log(options);
+    // console.log(options);
     Room.create(options, function(err, room) {
         if (err) {
             return cb(err);

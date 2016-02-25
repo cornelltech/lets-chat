@@ -30,7 +30,7 @@ module.exports = function() {
 
           notificationClient.sendNotification(uids, "You've got a new message", function(error, response) {
             console.log(error);
-            console.log(response);
+            // console.log(response);
           });
         });
 
@@ -77,8 +77,8 @@ module.exports = function() {
         },
         list: function(req, res) {
 
-          console.log('headers')
-          console.log(req.headers);
+          // console.log('headers')
+          // console.log(req.headers);
 
             var options = {
                     userId: req.user._id,
@@ -95,21 +95,21 @@ module.exports = function() {
                     expand: req.param('expand')
                 };
 
-            console.log('options');
-            console.log(options)
+            // console.log('options');
+            // console.log(options)
             core.messages.list(options, function(err, messages) {
                 if (err) {
                     return res.sendStatus(400);
                 }
 
-                console.log('found messages')
-                console.log(messages)
-                console.log('mapping messages');
+                // console.log('found messages')
+                // console.log(messages)
+                // console.log('mapping messages');
                 messages = messages.map(function(message) {
                     return message.toJSON(req.user);
                 });
 
-                console.log(messages);
+                // console.log(messages);
 
                 return res.json(messages);
             });

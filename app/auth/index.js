@@ -50,7 +50,7 @@ function setup(app, session, core) {
         var User = mongoose.model('User');
 
 
-        console.log(username);
+        // console.log(username);
         User.findByToken(username, function(err, user) {
             if (err) { return done(err); }
             if (!user) { return done(null, false); }
@@ -63,15 +63,15 @@ function setup(app, session, core) {
 
     function internalTokenAuth(token, callback) {
 
-        console.log('Checking token auth');
+        // console.log('Checking token auth');
         // console.log(token);
 
         var las_token = process.env.LUMBR_ACCOUNT_SERVER_TOKEN;
         var las_name = 'LUMBR_ACCOUNT_SERVER';
 
         if (las_token === token) {
-          console.log('Found matching token');
-          console.log(las_name);
+          // console.log('Found matching token');
+          // console.log(las_name);
           return callback(null, las_name);
         }
         return callback(null, false);

@@ -181,8 +181,8 @@ UserSchema.statics.findByToken = function(token, cb) {
         userId = tokenParts[0],
         hash = tokenParts[1];
 
-    console.log('found userid');
-    console.log(userId);
+    // console.log('found userid');
+    // console.log(userId);
 
     if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
         cb(null, null);

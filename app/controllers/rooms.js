@@ -234,7 +234,7 @@ module.exports = function() {
         create: function(req, res) {
 
 
-          console.log('CREATING ROOM!!!');
+          // console.log('CREATING ROOM!!!');
             var User = mongoose.model('User');
             //note that ownerUID
             var ownerUID = req.param('owner');

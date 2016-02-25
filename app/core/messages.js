@@ -117,13 +117,13 @@ MessageManager.prototype.list = function(options, cb) {
         find.sort({ 'posted': 1 });
     }
 
-    console.log('about to find room by id')
-    console.log(options.room)
+    // console.log('about to find room by id')
+    // console.log(options.room)
 
     Room.findById(options.room, function(err, room) {
-      console.log('in find room by id callback')
-      console.log(err)
-      console.log(room)
+      // console.log('in find room by id callback')
+      // console.log(err)
+      // console.log(room)
 
         if (err) {
             console.error(err);
@@ -135,11 +135,11 @@ MessageManager.prototype.list = function(options, cb) {
             password: options.password
         };
 
-        console.log('about to check can join')
+        // console.log('about to check can join')
         room.canJoin(opts, function(err, canJoin) {
-          console.log('in can join callback')
-          console.log(err);
-          console.log(canJoin);
+          // console.log('in can join callback')
+          // console.log(err);
+          // console.log(canJoin);
 
             if (err) {
                 console.error(err);
@@ -150,11 +150,11 @@ MessageManager.prototype.list = function(options, cb) {
                 return cb(null, []);
             }
 
-            console.log('about to find')
-            console.log(options)
+            // console.log('about to find')
+            // console.log(options)
             find.limit(options.take)
                 .exec(function(err, messages) {
-                    console.log('in find callback')
+                    // console.log('in find callback')
                     if (err) {
                         console.error(err);
                         return cb(err);
