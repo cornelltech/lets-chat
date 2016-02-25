@@ -1,9 +1,0 @@
-#
-# Settings
-#
-
-services:
-  LUMBR_ACCOUNT_SERVICE:
-    Token: izeQPtZLEVojPw4xX14F2kmEa4G0nHT7ANKUVovR
-  LETS_CHAT_SERVICE:
-    Token: vSv4IWuqaCwnThDYsG9KSJKo0wP0eWR0ng9uml4U

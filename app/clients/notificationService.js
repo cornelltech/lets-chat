@@ -4,7 +4,7 @@ var settings = require('../config');
 function sendNotification(uids, text, callback) {
 
     var url = process.env.LUMBR_NOTIFICATION_URL + '/push';
-    var token = settings.services.LETS_CHAT_SERVICE.Token;
+    var token = process.env.LETS_CHAT_SERVER_TOKEN;
 
     var data = {
       uids: uids,
@@ -14,7 +14,7 @@ function sendNotification(uids, text, callback) {
     };
 
     console.log('sending a message');
-    
+
     request({
       method: 'POST',
       url: url,

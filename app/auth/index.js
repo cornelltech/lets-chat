@@ -64,18 +64,14 @@ function setup(app, session, core) {
     function internalTokenAuth(token, callback) {
 
         console.log('Checking token auth');
-        console.log(token);
+        // console.log(token);
 
-        for (var key in settings.services) {
-          if (settings.services.hasOwnProperty(key)) {
-            var serviceName = key;
-            var serviceConfig = settings.services[key];
-            if (serviceConfig.Token === token) {
-              console.log('Found matching token');
-              console.log(serviceName);
-              return callback(null, serviceName);
-            }
-          }
+        var las_token = process.env.LUMBR_ACCOUNT_SERVER_TOKEN;
+
+        if (las_token === token) {
+          console.log('Found matching token');
+          console.log(serviceName);
+          return callback(null, serviceName);
         }
         return callback(null, false);
     }
