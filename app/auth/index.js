@@ -67,11 +67,12 @@ function setup(app, session, core) {
         // console.log(token);
 
         var las_token = process.env.LUMBR_ACCOUNT_SERVER_TOKEN;
+        var las_name = 'LUMBR_ACCOUNT_SERVER';
 
         if (las_token === token) {
           console.log('Found matching token');
-          console.log(serviceName);
-          return callback(null, serviceName);
+          console.log(las_name);
+          return callback(null, las_name);
         }
         return callback(null, false);
     }
