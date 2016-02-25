@@ -102,19 +102,19 @@ app.use(helmet.contentSecurityPolicy({
 
 //is this the right way to fix the issue of the options request
 //not having authentication info????
-app.use(function(req, res, next){
-
-    if (req.method=='OPTIONS'){
-        res.header("Access-Control-Allow-Origin", settings.cors.ALLOWED_ORIGINS);
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        res.header('Access-Control-Allow-Credentials', true);
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.sendStatus(200);
-    }
-    else{
-        next();
-    } // Continue with the process
-});
+// app.use(function(req, res, next){
+//
+//     if (req.method=='OPTIONS'){
+//         res.header("Access-Control-Allow-Origin", settings.cors.ALLOWED_ORIGINS);
+//         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//         res.header('Access-Control-Allow-Credentials', true);
+//         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//         res.sendStatus(200);
+//     }
+//     else{
+//         next();
+//     } // Continue with the process
+// });
 
 var bundles = {};
 app.use(require('connect-assets')({
@@ -180,13 +180,13 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", settings.cors.ALLOWED_ORIGINS);
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", settings.cors.ALLOWED_ORIGINS);
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//   res.header('Access-Control-Allow-Credentials', true);
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+//   next();
+// });
 
 //
 // Controllers

@@ -31,7 +31,7 @@ xmpp:
     cert: ./server.crt
 
 cors:
-  ALLOWED_ORIGINS: '*'
+  ALLOWED_ORIGINS: ''
 
 database:
   uri: mongodb://localhost/letschat
