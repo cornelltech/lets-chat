@@ -142,7 +142,7 @@ module.exports = function() {
       middlewares.requireInternalToken,
     function(req, res) {
 
-      // var uid = req.query.uid;
+      var uid = req.query.uid;
       // console.log(req.query);
 
       if (!uid) {
