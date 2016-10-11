@@ -92,7 +92,6 @@ RoomSchema.plugin(uniqueValidator, {
 
 RoomSchema.method('isAuthorized', function(userId) {
 
-    console.log('isAuthorized? ', userId)
     if (!userId) {
         return false;
     }
