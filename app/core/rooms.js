@@ -278,7 +278,7 @@ RoomManager.prototype.list = function(options, cb) {
 
     options = helpers.sanitizeQuery(options, {
         defaults: {
-            take: 25
+            take: 10
         },
         maxTake: 5000
     });
@@ -325,6 +325,7 @@ RoomManager.prototype.list = function(options, cb) {
         }
 
         console.log('found rooms of length', rooms.length)
+        console.log(rooms)
         _.each(rooms, function(room) {
             this.sanitizeRoom(options, room);
         }, this);
