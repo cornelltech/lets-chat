@@ -294,9 +294,7 @@ RoomManager.prototype.list = function(options, cb) {
 
             {owner: options.userId},
 
-            {participants: options.userId},
-
-            {password: {$exists: true, $ne: ''}}
+            {participants: options.userId}}
         ]
     });
 
