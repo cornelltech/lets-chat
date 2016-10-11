@@ -278,7 +278,7 @@ RoomManager.prototype.list = function(options, cb) {
 
     options = helpers.sanitizeQuery(options, {
         defaults: {
-            take: 1
+            take: 25
         },
         maxTake: 5000
     });
