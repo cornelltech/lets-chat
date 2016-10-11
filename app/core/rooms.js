@@ -294,7 +294,7 @@ RoomManager.prototype.list = function(options, cb) {
 
             {owner: options.userId},
 
-            {participants: options.userId}}
+            {participants: options.userId}
         ]
     });
 
