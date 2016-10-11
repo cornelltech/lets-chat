@@ -43,6 +43,8 @@ function setup(app, session, core) {
     });
 
     function tokenAuth(username, password, done) {
+
+        console.log('in token auth callback', username)
         if (!done) {
             done = password;
         }
@@ -52,6 +54,7 @@ function setup(app, session, core) {
 
         // console.log(username);
         User.findByToken(username, function(err, user) {
+            console.log('in user findByToken callback')
             if (err) { return done(err); }
             if (!user) { return done(null, false); }
             return done(null, user);
