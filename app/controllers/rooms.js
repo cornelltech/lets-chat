@@ -90,6 +90,7 @@ module.exports = function() {
     //
     app.route('/rooms')
         .get(middlewares.requireLogin, function(req) {
+            console.log('past required login for user', req.user._id)
             req.io.route('rooms:list');
         })
         .post(middlewares.requireInternalToken,
@@ -171,20 +172,26 @@ module.exports = function() {
                     take: req.param('take')
                 };
 
+            console.log('calling core.rooms.list with options', options)
             core.rooms.list(options, function(err, rooms) {
+                console.log('core.rooms.list callback')
                 if (err) {
                     console.error(err);
                     return res.status(400).json(err);
                 }
 
+                console.log('found room count', rooms.length)
                 var filteredRooms = rooms.filter(function(room) {
                   return room.isAuthorized(req.user._id);
                 });
+
+                console.log('filtered room count', filteredRooms.length)
 
                 var results = filteredRooms.map(function(room) {
                     return room.toJSON(req.user);
                 });
 
+                console.log('sending response with count', results.length)
                 res.json(results);
             });
         },

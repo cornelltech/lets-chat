@@ -285,6 +285,7 @@ RoomManager.prototype.list = function(options, cb) {
 
     var Room = mongoose.model('Room');
 
+    console.log('finding rooms with the following options', options)
     var find = Room.find({
         archived: { $ne: true },
         $or: [
@@ -317,11 +318,13 @@ RoomManager.prototype.list = function(options, cb) {
     find.populate('participants');
     find.populate('owner');
 
+    console.log('executing query')
     find.exec(function(err, rooms) {
         if (err) {
             return cb(err);
         }
 
+        console.log('found rooms of length', rooms.length)
         _.each(rooms, function(room) {
             this.sanitizeRoom(options, room);
         }, this);
@@ -331,6 +334,7 @@ RoomManager.prototype.list = function(options, cb) {
                      .reverse();
         }
 
+        console.log('calling back')
         cb(null, rooms);
 
     }.bind(this));
