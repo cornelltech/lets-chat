@@ -278,7 +278,7 @@ RoomManager.prototype.list = function(options, cb) {
 
     options = helpers.sanitizeQuery(options, {
         defaults: {
-            take: 10
+            take: 500
         },
         maxTake: 5000
     });
@@ -294,7 +294,8 @@ RoomManager.prototype.list = function(options, cb) {
 
             {owner: options.userId},
 
-            {participants: options.userId}
+            {participants: options.userId},
+            {password: {$exists: true, $ne: ''}}
         ]
     });
 
@@ -316,7 +317,7 @@ RoomManager.prototype.list = function(options, cb) {
     find.populate('participants');
     find.populate('owner');
 
-    // console.log('executing query', find)
+    console.log('executing query', find)
     find.exec(function(err, rooms) {
         if (err) {
             return cb(err);
