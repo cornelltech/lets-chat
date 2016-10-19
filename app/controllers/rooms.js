@@ -214,7 +214,11 @@ module.exports = function() {
                     var participants = room.participants.map(function(participant_id) {
                       return userMap.get(participant_id)
                     })
+
+                    console.log('setting participants to', participants)
                     var owner = userMap.get(room.owner)
+
+                    console.log('setting owner to', owner)
                     room.participants = participants;
                     room.owner = owner;
 
