@@ -189,9 +189,9 @@ module.exports = function() {
                 var userSet = new Set();
 
                 filteredRooms.forEach(function(room) {
-                  accSet.add(room.owner);
+                  userSet.add(room.owner);
                   room.participants.forEach(function(participant) {
-                    accSet.add(participant);
+                    userSet.add(participant);
                   });
                 });
 
