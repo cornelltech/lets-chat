@@ -294,8 +294,7 @@ RoomManager.prototype.list = function(options, cb) {
 
             {owner: options.userId},
 
-            {participants: options.userId},
-            {password: {$exists: true, $ne: ''}}
+            {participants: options.userId}
         ]
     });
 
@@ -317,11 +316,13 @@ RoomManager.prototype.list = function(options, cb) {
     find.populate('participants');
     find.populate('owner');
 
-    var timeoutInMS = 1;
+    //timeout does not seem to have any effect
+    var timeoutInMS = 100;
     find.maxTime(timeoutInMS)
 
     console.log('timeout set to', timeoutInMS)
-    console.log('executing query', find)
+    // console.log('executing query', find)
+    console.log('executing find rooms query')
     find.exec(function(err, rooms) {
         if (err) {
             return cb(err);
