@@ -280,7 +280,7 @@ RoomManager.prototype.list = function(options, cb) {
         defaults: {
             take: 5
         },
-        maxTake: 5
+        maxTake: 100
     });
 
     var Room = mongoose.model('Room');
