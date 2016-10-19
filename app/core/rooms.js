@@ -278,7 +278,7 @@ RoomManager.prototype.list = function(options, cb) {
 
     options = helpers.sanitizeQuery(options, {
         defaults: {
-            take: 500
+            take: 1
         },
         maxTake: 5000
     });
@@ -320,8 +320,8 @@ RoomManager.prototype.list = function(options, cb) {
     var timeoutInMS = 1;
     find.maxTime(timeoutInMS)
 
-    console.log('executing query', find)
     console.log('timeout set to', timeoutInMS)
+    console.log('executing query', find)
     find.exec(function(err, rooms) {
         if (err) {
             return cb(err);

@@ -172,7 +172,7 @@ module.exports = function() {
                     take: req.param('take')
                 };
 
-            // console.log('calling core.rooms.list with options', options)
+            console.log('calling core.rooms.list with options', options)
             core.rooms.list(options, function(err, rooms) {
                 // console.log('core.rooms.list callback')
                 if (err) {
@@ -191,7 +191,7 @@ module.exports = function() {
                     return room.toJSON(req.user);
                 });
 
-                // console.log('sending response with count', results.length)
+                console.log('sending response with count', results.length)
                 res.json(results);
             });
         },
