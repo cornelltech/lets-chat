@@ -317,7 +317,7 @@ RoomManager.prototype.list = function(options, cb) {
     find.populate('participants');
     find.populate('owner');
 
-    find.maxTime(5000)
+    find.maxTime(100)
 
     console.log('executing query', find)
     find.exec(function(err, rooms) {
