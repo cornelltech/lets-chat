@@ -230,8 +230,13 @@ module.exports = function() {
                   })
 
                   var mappedRooms = filteredRooms.map(function(room) {
-                    room.participants = room.participants.map(function(participant_id) {
-                      return userMap.get(participant_id.toString())
+
+                    console.log("before participant update",room.participants)
+                    var participants = room.participants;
+                    room.participants = [];
+
+                    participants.forEach(function(participant_id) {
+                      room.participants.push(userMap.get(participant_id.toString()))
                     });
 
                     console.log('setting participants to', room.participants)
