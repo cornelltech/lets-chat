@@ -225,8 +225,8 @@ module.exports = function() {
                   });
 
                   console.log('the user map is ')
-                  userMap.keys().forEach(function(key) {
-                    console.log(key)
+                  userMap.forEach(function(entry) {
+                    console.log(entry)
                   })
 
                   var mappedRooms = filteredRooms.map(function(room) {
