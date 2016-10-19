@@ -186,15 +186,16 @@ module.exports = function() {
                 });
 
                 //create a set of unique users
-                var userSet = filteredRooms.reduce(function(accSet, room) {
+                var userSet = new Set();
+
+                filteredRooms.forEach(function(room) {
                   accSet.add(room.owner);
                   room.participants.forEach(function(participant) {
                     accSet.add(participant);
                   });
+                });
 
-                  return accSet;
-                }, new Set());
-
+                console.log('the user set is', userSet);
                 var uniqueUserArray = [];
                 userSet.forEach(function(user) {
                   uniqueUserArray.push(user);
