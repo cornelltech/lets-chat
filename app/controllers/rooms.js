@@ -200,15 +200,21 @@ module.exports = function() {
                   uniqueUserArray.push(user);
                 })
 
+                console.log('the list of unique users is', uniqueUserArray)
+
                 core.users.findByIds(uniqueUserArray, function(err, users) {
                   if (err) {
                       console.error(err);
                       return res.status(400).json(err);
                   }
 
+                  console.log('the list of found users is', users)
+
                   var userMap = users.reduce(function(accMap, user) {
                     return accMap.set(user._id, user);
                   }, new Map());
+
+                  console.log('the user map is ', userMap)
 
                   var mappedRooms = filteredRooms.map(function(room) {
                     var participants = room.participants.map(function(participant_id) {
