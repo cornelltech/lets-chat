@@ -185,14 +185,48 @@ module.exports = function() {
                   return room.isAuthorized(req.user._id);
                 });
 
-                // console.log('filtered room count', filteredRooms.length)
+                //create a set of unique users
+                var userSet = filteredRooms.reduce(function(accSet, room) {
+                  accSet.add(room.owner);
+                  room.participants.forEach(function(participant) {
+                    accSet.add(participant);
+                  });
 
-                var results = filteredRooms.map(function(room) {
-                    return room.toJSON(req.user);
-                });
+                  return accSet;
+                }, new Set());
 
-                console.log('sending response with count', results.length)
-                res.json(results);
+                core.users.findByIds(Array.from(userSet), function(err, users) {
+                  if (err) {
+                      console.error(err);
+                      return res.status(400).json(err);
+                  }
+
+                  var userMap = users.reduce(function(accMap, user) {
+                    return accMap.set(user._id, user);
+                  }, new Map());
+
+                  var mappedRooms = filteredRooms.map(function(room) {
+                    var participants = room.participants.map(function(participant_id) {
+                      return userMap.get(participant_id)
+                    })
+                    var owner = userMap.get(room.owner)
+                    room.participants = participants;
+                    room.owner = owner;
+
+                    return room;
+                  })
+                  // console.log('filtered room count', filteredRooms.length)
+
+                  var results = mappedRooms.map(function(room) {
+                      return room.toJSON(req.user);
+                  });
+
+                  console.log('sending response with count', results.length)
+                  res.json(results);
+
+                })
+
+
             });
         },
         get: function(req, res) {

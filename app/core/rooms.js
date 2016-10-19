@@ -278,9 +278,9 @@ RoomManager.prototype.list = function(options, cb) {
 
     options = helpers.sanitizeQuery(options, {
         defaults: {
-            take: 1
+            take: 5
         },
-        maxTake: 5000
+        maxTake: 5
     });
 
     var Room = mongoose.model('Room');
