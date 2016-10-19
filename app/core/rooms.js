@@ -317,9 +317,11 @@ RoomManager.prototype.list = function(options, cb) {
     find.populate('participants');
     find.populate('owner');
 
-    find.maxTime(100)
+    var timeoutInMS = 1;
+    find.maxTime(timeoutInMS)
 
     console.log('executing query', find)
+    console.log('timeout set to', timeoutInMS)
     find.exec(function(err, rooms) {
         if (err) {
             return cb(err);
