@@ -2,11 +2,11 @@
 
 module.exports = {
     sanitizeQuery: function(query, options) {
-        if typeof query.take === 'string' {
+        if (typeof query.take === 'string') {
           query.take = parseInt(query.take)
         }
 
-        if typeof query.skip === 'string' {
+        if (typeof query.skip === 'string') {
           query.skip = parseInt(query.skip)
         }
 
