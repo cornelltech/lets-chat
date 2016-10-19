@@ -243,7 +243,7 @@ module.exports = function() {
 
                     return room;
                   })
-                  // console.log('filtered room count', filteredRooms.length)
+                  console.log('mapped rooms', mappedRooms)
 
                   var results = mappedRooms.map(function(room) {
                       return room.toJSON(req.user);
