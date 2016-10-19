@@ -189,9 +189,14 @@ module.exports = function() {
                 var userSet = new Set();
 
                 filteredRooms.forEach(function(room) {
-                  userSet.add(room.owner);
+                  if (!userSet.has(room.owner)) {
+                    userSet.add(room.owner);
+                  }
+
                   room.participants.forEach(function(participant) {
-                    userSet.add(participant);
+                    if (!userSet.has(participant)) {
+                      userSet.add(participant);
+                    }
                   });
                 });
 
@@ -219,7 +224,10 @@ module.exports = function() {
                     return userMap.set(user._id, user);
                   });
 
-                  console.log('the user map is ', userMap)
+                  console.log('the user map is ')
+                  userMap.keys().forEach(function(key) {
+                    console.log(key)
+                  })
 
                   var mappedRooms = filteredRooms.map(function(room) {
                     var participants = room.participants.map(function(participant_id) {
