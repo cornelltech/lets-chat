@@ -187,15 +187,15 @@ module.exports = function() {
 
                 //create a set of unique users
                 var userSet = new Set();
-
                 filteredRooms.forEach(function(room) {
-                  if (!userSet.has(room.owner)) {
-                    userSet.add(room.owner);
+
+                  if (!userSet.has(room.owner.toString())) {
+                    userSet.add(room.owner.toString());
                   }
 
                   room.participants.forEach(function(participant) {
-                    if (!userSet.has(participant)) {
-                      userSet.add(participant);
+                    if (!userSet.has(participant.toString())) {
+                      userSet.add(participant.toString());
                     }
                   });
                 });
@@ -221,7 +221,7 @@ module.exports = function() {
                   var userMap = new Map();
 
                   users.forEach(function(user) {
-                    return userMap.set(user._id, user);
+                    return userMap.set(user._id.toString(), user);
                   });
 
                   console.log('the user map is ')
@@ -231,11 +231,11 @@ module.exports = function() {
 
                   var mappedRooms = filteredRooms.map(function(room) {
                     var participants = room.participants.map(function(participant_id) {
-                      return userMap.get(participant_id)
+                      return userMap.get(participant_id.toString())
                     })
 
                     console.log('setting participants to', participants)
-                    var owner = userMap.get(room.owner)
+                    var owner = userMap.get(room.owner.toString())
 
                     console.log('setting owner to', owner)
                     room.participants = participants;
