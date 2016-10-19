@@ -195,7 +195,10 @@ module.exports = function() {
                   return accSet;
                 }, new Set());
 
-                var uniqueUserArray = new Array.from(userSet);
+                var uniqueUserArray = [];
+                userSet.forEach(function(user) {
+                  uniqueUserArray.push(user);
+                })
 
                 core.users.findByIds(uniqueUserArray, function(err, users) {
                   if (err) {
