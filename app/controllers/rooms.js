@@ -198,6 +198,7 @@ module.exports = function() {
                 console.log('the user set is', userSet);
                 var uniqueUserArray = [];
                 userSet.forEach(function(user) {
+                  console.log('adding to unique user array', user)
                   uniqueUserArray.push(user);
                 })
 
@@ -211,9 +212,12 @@ module.exports = function() {
 
                   console.log('the list of found users is', users)
 
-                  var userMap = users.reduce(function(accMap, user) {
-                    return accMap.set(user._id, user);
-                  }, new Map());
+
+                  var userMap = new Map();
+
+                  users.forEach(function(user) {
+                    return userMap.set(user._id, user);
+                  });
 
                   console.log('the user map is ', userMap)
 
