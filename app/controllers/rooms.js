@@ -230,16 +230,16 @@ module.exports = function() {
                   })
 
                   var mappedRooms = filteredRooms.map(function(room) {
-                    var participants = room.participants.map(function(participant_id) {
+                    room.participants = room.participants.map(function(participant_id) {
                       return userMap.get(participant_id.toString())
-                    })
+                    });
 
-                    console.log('setting participants to', participants)
-                    var owner = userMap.get(room.owner.toString())
+                    console.log('setting participants to', room.participants)
+                    room.owner = userMap.get(room.owner.toString())
 
-                    console.log('setting owner to', owner)
-                    room.participants = participants;
-                    room.owner = owner;
+                    console.log('setting owner to', room.owner)
+
+                    console.log('returning updated room', room);
 
                     return room;
                   })
