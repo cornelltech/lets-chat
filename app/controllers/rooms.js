@@ -195,7 +195,9 @@ module.exports = function() {
                   return accSet;
                 }, new Set());
 
-                core.users.findByIds(Array.from(userSet), function(err, users) {
+                var uniqueUserArray = new Array.from(userSet);
+
+                core.users.findByIds(uniqueUserArray, function(err, users) {
                   if (err) {
                       console.error(err);
                       return res.status(400).json(err);
