@@ -7,7 +7,7 @@ function UserManager(options) {
     this.core = options.core;
 }
 
-function listAllUsersHelper(accumulatedUsers, skip, take, cb) {
+UserManager.prototype.listAllUsersHelper(accumulatedUsers, skip, take, cb) {
 
   var options = {
     take: take,
@@ -16,7 +16,8 @@ function listAllUsersHelper(accumulatedUsers, skip, take, cb) {
 
 
   console.log('calling user list with ', options)
-  this.core.users.list(options, function(err, users) {
+  console.log(this);
+  this.list(options, function(err, users) {
       console.log('user list callback in listAllUsersHelper')
       if (err) {
           console.log(err);
@@ -37,7 +38,8 @@ function listAllUsersHelper(accumulatedUsers, skip, take, cb) {
 
 UserManager.prototype.listAllUsers = function(cb) {
   console.log('calling initial listAllUsersHelper')
-  listAllUsersHelper([], 0, 50, cb);
+  console.log(this);
+  this.listAllUsersHelper([], 0, 50, cb);
 }
 
 UserManager.prototype.list = function(options, cb) {
