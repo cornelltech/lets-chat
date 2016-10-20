@@ -278,9 +278,9 @@ RoomManager.prototype.list = function(options, cb) {
 
     options = helpers.sanitizeQuery(options, {
         defaults: {
-            take: 1
+            take: 100
         },
-        maxTake: 5
+        maxTake: 500
     });
 
     var Room = mongoose.model('Room');
@@ -313,8 +313,8 @@ RoomManager.prototype.list = function(options, cb) {
         find.sort('-lastActive');
     }
 
-    find.populate('participants');
-    find.populate('owner');
+    // find.populate('participants');
+    // find.populate('owner');
 
     //timeout does not seem to have any effect
     var timeoutInMS = 100;
