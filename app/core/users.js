@@ -26,6 +26,9 @@ UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take
       }
 
       var newUsers = accumulatedUsers.concat(users);
+      console.log('found users of length', users.length)
+      console.log('take is length', take);
+      console.log('the accumulated user count is', newUsers.length)
       if (users.length < take) {
         console.log('calling final callback in listAllUsersHelper');
         return cb(null, newUsers);
