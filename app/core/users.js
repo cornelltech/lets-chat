@@ -9,27 +9,27 @@ function UserManager(options) {
 
 UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take, cb) {
 
-  console.log('skip', skip)
-  console.log('take', take)
+  // console.log('skip', skip)
+  // console.log('take', take)
   // console.log(this);
 
   var listCallback = function(err, users) {
-      console.log('user list callback in listAllUsersHelper')
+      // console.log('user list callback in listAllUsersHelper')
       if (err) {
           console.log(err);
           return cb(err);
       }
 
       var newUsers = accumulatedUsers.concat(users);
-      console.log('found users of length', users.length)
-      console.log('take is length', take);
-      console.log('the accumulated user count is', newUsers.length)
+      // console.log('found users of length', users.length)
+      // console.log('take is length', take);
+      // console.log('the accumulated user count is', newUsers.length)
       if (users.length < take) {
-        console.log('calling final callback in listAllUsersHelper');
+        // console.log('calling final callback in listAllUsersHelper');
         return cb(null, newUsers);
       }
       else {
-        console.log('recursing in listAllUsersHelper')
+        // console.log('recursing in listAllUsersHelper')
         return this.listAllUsersHelper(newUsers, skip + users.length, take, cb);
       }
   };
@@ -40,7 +40,7 @@ UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take
 
 var takeSize = 50;
 UserManager.prototype.listAllUsers = function(cb) {
-  console.log('calling initial listAllUsersHelper')
+  // console.log('calling initial listAllUsersHelper')
   this.listAllUsersHelper([], 0, takeSize, cb);
 }
 
@@ -58,7 +58,7 @@ UserManager.prototype.list = function(options, cb) {
 
     var find = User.find();
 
-    console.log('user find options', options);
+    // console.log('user find options', options);
     if (options.skip) {
         find.skip(options.skip);
     }
@@ -67,7 +67,7 @@ UserManager.prototype.list = function(options, cb) {
         find.limit(options.take);
     }
 
-    console.log('executing user list');
+    // console.log('executing user list');
 
     find.exec(cb);
 };

@@ -40,7 +40,7 @@ module.exports = function() {
                 };
 
             core.users.list(options, function(err, users) {
-                console.log('user list callback')
+                // console.log('user list callback')
                 if (err) {
                     console.log(err);
                     return res.status(400).json(err);

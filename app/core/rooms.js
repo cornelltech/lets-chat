@@ -320,7 +320,7 @@ RoomManager.prototype.list = function(options, cb) {
     var timeoutInMS = 100;
     find.maxTime(timeoutInMS)
 
-    console.log('timeout set to', timeoutInMS)
+    // console.log('timeout set to', timeoutInMS)
     // console.log('executing query', find)
     console.log('executing find rooms query')
     find.exec(function(err, rooms) {
@@ -328,7 +328,7 @@ RoomManager.prototype.list = function(options, cb) {
             return cb(err);
         }
 
-        console.log('found rooms of length', rooms.length)
+        // console.log('found rooms of length', rooms.length)
         // console.log(rooms)
         _.each(rooms, function(room) {
             this.sanitizeRoom(options, room);

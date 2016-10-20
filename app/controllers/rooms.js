@@ -172,15 +172,15 @@ module.exports = function() {
                     take: req.param('take')
                 };
 
-            console.log('calling core.rooms.list with options', options)
+            // console.log('calling core.rooms.list with options', options)
             core.rooms.list(options, function(err, rooms) {
-                console.log('core.rooms.list callback')
+                // console.log('core.rooms.list callback')
                 if (err) {
                     console.error(err);
                     return res.status(400).json(err);
                 }
 
-                console.log('found room count', rooms.length)
+                // console.log('found room count', rooms.length)
                 var filteredRooms = rooms.filter(function(room) {
                   return room.isAuthorized(req.user._id);
                 });
@@ -202,34 +202,34 @@ module.exports = function() {
                 //ALL users, then create a map to do an in memory lookup
 
 
-                console.log('calling core.users.list')
+                // console.log('calling core.users.list')
                 core.users.listAllUsers(function(err, users) {
-                  console.log('core.users.list callback')
+                  // console.log('core.users.list callback')
 
                   if (err) {
                       console.error(err);
                       return res.status(400).json(err);
                   }
 
-                  console.log('found user count', users.length)
+                  // console.log('found user count', users.length)
                   var userMap = new Map();
 
                   users.forEach(function(user) {
-                    console.log('setting key', user._id.toString())
-                    console.log('setting user', user)
+                    // console.log('setting key', user._id.toString())
+                    // console.log('setting user', user)
                     userMap.set(user._id.toString(), user);
                   });
 
-                  
+
 
                   var results = roomObjects.map(function(room) {
-                    console.log('room', room);
+                    // console.log('room', room);
                     var owner = userMap.get(room.owner.toString()).uid;
-                    console.log('adding owner', owner)
+                    // console.log('adding owner', owner)
                     room.owner = owner;
                     room.participants = room.participants.map(function(participant_id) {
                       var participant = userMap.get(participant_id.toString())
-                      console.log('adding participant', participant)
+                      // console.log('adding participant', participant)
                       return participant.uid;
                     });
                     return room;
