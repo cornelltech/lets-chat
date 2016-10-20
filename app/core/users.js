@@ -21,6 +21,7 @@ UserManager.prototype.list = function(options, cb) {
 
     var find = User.find();
 
+    console.log('user find options', options);
     if (options.skip) {
         find.skip(options.skip);
     }
