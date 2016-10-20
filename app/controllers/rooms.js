@@ -237,7 +237,7 @@ module.exports = function() {
 
                   var results = mappedRooms.map(function(room) {
                     console.log('room object', room)
-                    room.owner = userMap.get(room.owner).uid;
+                    room.owner = userMap.get(room.owner.toString()).uid;
                     var participants = room.participants;
                     room.participants = [];
 
