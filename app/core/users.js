@@ -7,6 +7,39 @@ function UserManager(options) {
     this.core = options.core;
 }
 
+function listAllUsersHelper(accumulatedUsers, skip, take, cb) {
+
+  var options = {
+    take: take,
+    skip: skip
+  }
+
+
+  console.log('calling user list with ', options)
+  this.core.users.list(options, function(err, users) {
+      console.log('user list callback in listAllUsersHelper')
+      if (err) {
+          console.log(err);
+          return cb(err);
+      }
+
+      var newUsers = accumulatedUsers.concat(users);
+      if (users.length < take) {
+        console.log('calling final callback in listAllUsersHelper');
+        return cb(null, newUsers);
+      }
+      else {
+        console.log('recursing in listAllUsersHelper')
+        return listAllUsersHelper(newUsers, skip, take + skip, cb);
+      }
+  });
+}
+
+UserManager.prototype.listAllUsers = function(cb) {
+  console.log('calling initial listAllUsersHelper')
+  listAllUsersHelper([], 0, 50, cb);
+}
+
 UserManager.prototype.list = function(options, cb) {
     options = options || {};
 
