@@ -31,7 +31,7 @@ UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take
       }
       else {
         console.log('recursing in listAllUsersHelper')
-        return listAllUsersHelper(newUsers, skip, take + skip, cb);
+        return this.listAllUsersHelper(newUsers, skip, take + skip, cb);
       }
   });
 }
