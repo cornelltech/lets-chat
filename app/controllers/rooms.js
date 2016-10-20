@@ -220,7 +220,10 @@ module.exports = function() {
                     userMap.set(user._id.toString(), user);
                   });
 
+                  
+
                   var results = roomObjects.map(function(room) {
+                    console.log('room', room);
                     var owner = userMap.get(room.owner.toString()).uid;
                     console.log('adding owner', owner)
                     room.owner = owner;

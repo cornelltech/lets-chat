@@ -37,10 +37,11 @@ UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take
   this.list({take: take, skip: skip}, listCallback.bind(this));
 }
 
+
+var takeSize = 50;
 UserManager.prototype.listAllUsers = function(cb) {
   console.log('calling initial listAllUsersHelper')
-  console.log(this);
-  this.listAllUsersHelper([], 0, 50, cb);
+  this.listAllUsersHelper([], 0, takeSize, cb);
 }
 
 UserManager.prototype.list = function(options, cb) {
