@@ -185,74 +185,84 @@ module.exports = function() {
                   return room.isAuthorized(req.user._id);
                 });
 
-                //create a set of unique users
-                var userSet = new Set();
-                filteredRooms.forEach(function(room) {
-
-                  if (!userSet.has(room.owner.toString())) {
-                    userSet.add(room.owner.toString());
-                  }
-
-                  room.participants.forEach(function(participant) {
-                    if (!userSet.has(participant.toString())) {
-                      userSet.add(participant.toString());
-                    }
-                  });
+                var results = filteredRooms.map(function(room) {
+                    return room.toJSON(req.user);
                 });
 
-                console.log('the user set is', userSet);
-                var uniqueUserArray = [];
-                userSet.forEach(function(user) {
-                  console.log('adding to unique user array', user)
-                  uniqueUserArray.push(user);
-                })
+                res.json(results);
 
-                console.log('the list of unique users is', uniqueUserArray)
-
-                core.users.findByIds(uniqueUserArray, function(err, users) {
-                  if (err) {
-                      console.error(err);
-                      return res.status(400).json(err);
-                  }
-
-                  console.log('the list of found users is', users)
-
-
-                  var userMap = new Map();
-
-                  users.forEach(function(user) {
-                    console.log('setting key', user._id.toString())
-                    console.log('setting user', user)
-                    userMap.set(user._id.toString(), user);
-                  });
-
-                  console.log('the user map is ')
-                  userMap.forEach(function(entry) {
-                    console.log(entry)
-                  })
-
-                  var mappedRooms = filteredRooms.map(function(room) {
-                      return room.toJSON(req.user);
-                  });
-
-                  var results = mappedRooms.map(function(room) {
-                    console.log('room object', room)
-                    room.owner = userMap.get(room.owner.toString()).uid;
-                    var participants = room.participants;
-                    room.participants = [];
-
-                    participants.forEach(function(participant_id) {
-                      var participant = userMap.get(participant_id.toString())
-                      console.log('adding participant', participant)
-                      room.participants.push(participant.uid)
-                    });
-                    return room;
-                  })
-
-                  console.log('sending response with count', results.length)
-                  res.json(results);
-
-                })
+//                 //create a set of unique users
+//                 var userSet = new Set();
+//                 filteredRooms.forEach(function(room) {
+//
+//                   if (!userSet.has(room.owner.toString())) {
+//                     userSet.add(room.owner.toString());
+//                   }
+//
+//                   room.participants.forEach(function(participant) {
+//                     if (!userSet.has(participant.toString())) {
+//                       userSet.add(participant.toString());
+//                     }
+//                   });
+//                 });
+//
+//                 console.log('the user set is', userSet);
+//                 var uniqueUserArray = [];
+//                 userSet.forEach(function(user) {
+//                   console.log('adding to unique user array', user)
+//                   uniqueUserArray.push(user);
+//                 })
+//
+//                 console.log('the list of unique users is', uniqueUserArray)
+//
+//                 core.users.findByIds(uniqueUserArray, function(err, users) {
+//                   if (err) {
+//                       console.error(err);
+//                       return res.status(400).json(err);
+//                   }
+//
+//                   console.log('the list of found users is', users)
+//
+//
+//                   var userMap = new Map();
+//
+//                   users.forEach(function(user) {
+//                     // console.log('setting key', user._id.toString())
+//                     // console.log('setting user', user)
+//                     userMap.set(user._id.toString(), user);
+//                   });
+//
+//                   // console.log('the user map is ')
+//                   // userMap.forEach(function(entry) {
+//                   //   console.log(entry)
+//                   // })
+//
+//                   var mappedRooms = filteredRooms.map(function(room) {
+//                       return room.toJSON(req.user);
+//                   });
+//
+//                   var results = mappedRooms.map(function(room) {
+//                     console.log('room object', room)
+//                     room.owner = userMap.get(room.owner.toString()).uid;
+//                     // var participants = room.participants;
+//                     // room.participants = [];
+//                     //
+//                     // participants.forEach(function(participant_id) {
+//                       // var participant = userMap.get(participant_id.toString())
+//                       // console.log('adding participant', participant)
+//                       // room.participants.push(participant.uid)
+//                     // });
+//                     room.participants = room.participants.map(function(participant_id) {
+//                       var participant = userMap.get(participant_id.toString())
+//                       console.log('adding participant', participant)
+//                       return participant.uid;
+//                     });
+//                     return room;
+//                   })
+// ]
+//                   res.json(results);
+//
+//                 })
 
 
             });
