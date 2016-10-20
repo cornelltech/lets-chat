@@ -12,9 +12,9 @@ UserManager.prototype.list = function(options, cb) {
 
     options = helpers.sanitizeQuery(options, {
         defaults: {
-            take: 500
+            take: 50
         },
-        maxTake: 5000
+        maxTake: 50
     });
 
     var User = mongoose.model('User');
