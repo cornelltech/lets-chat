@@ -7,7 +7,7 @@ function UserManager(options) {
     this.core = options.core;
 }
 
-UserManager.prototype.listAllUsersHelper(accumulatedUsers, skip, take, cb) {
+UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take, cb) {
 
   var options = {
     take: take,
