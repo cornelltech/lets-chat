@@ -204,6 +204,7 @@ module.exports = function() {
                 var usersOptions = {
                   take: 500
                 };
+                
                 console.log('calling core.users.list with options', usersOptions)
                 core.users.list(usersOptions, function(err, users) {
                   console.log('core.users.list callback')

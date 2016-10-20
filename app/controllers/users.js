@@ -16,8 +16,8 @@ module.exports = function() {
     // Routes
     //
 
-    // app.get('/users', middlewares.requireLogin, function(req) {
-    app.get('/users', function(req) {
+    app.get('/users', middlewares.requireLogin, function(req) {
+    // app.get('/users', function(req) {
         req.io.route('users:list');
     });
 

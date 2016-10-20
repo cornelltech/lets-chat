@@ -29,6 +29,8 @@ UserManager.prototype.list = function(options, cb) {
         find.limit(options.take);
     }
 
+    console.log('executing user list');
+
     find.exec(cb);
 };
 
