@@ -201,7 +201,9 @@ module.exports = function() {
                 //for small enough number of users, should be ok to load
                 //ALL users, then create a map to do an in memory lookup
 
-                var usersOptions = {};
+                var usersOptions = {
+                  take: 10
+                };
                 console.log('calling core.users.list with options', usersOptions)
                 core.users.list(usersOptions, function(err, users) {
                   console.log('core.users.list callback')
