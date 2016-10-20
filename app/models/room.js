@@ -211,7 +211,7 @@ RoomSchema.method('toJSON', function(user) {
         data.participants = participants.map(function(user) {
             return user.uid ? user.uid : user;
         });
-        data.owner = data.owner.uid;
+        data.owner = data.owner.uid ? data.owner.uid : data.owner;
     }
 
     if (this.users) {
