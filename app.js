@@ -214,6 +214,12 @@ mongoose.connection.on('disconnected', function() {
     throw new Error('Could not connect to database');
 });
 
+mongoose.set('debug', true);
+
+// mongoose.set('debug', function (coll, method, query, doc [, options]) {
+//
+// });
+
 //
 // Go Time
 //
