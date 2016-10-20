@@ -17,7 +17,8 @@ UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take
 
   console.log('calling user list with ', options)
   console.log(this);
-  this.list(options, function(err, users) {
+
+  var listCallback = function(err, users) {
       console.log('user list callback in listAllUsersHelper')
       if (err) {
           console.log(err);
@@ -33,7 +34,9 @@ UserManager.prototype.listAllUsersHelper = function(accumulatedUsers, skip, take
         console.log('recursing in listAllUsersHelper')
         return this.listAllUsersHelper(newUsers, skip, take + skip, cb);
       }
-  });
+  };
+
+  this.list(options, listCallback.bind(this));
 }
 
 UserManager.prototype.listAllUsers = function(cb) {
