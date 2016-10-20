@@ -313,8 +313,8 @@ RoomManager.prototype.list = function(options, cb) {
         find.sort('-lastActive');
     }
 
-    // find.populate('participants');
-    // find.populate('owner');
+    find.populate('participants');
+    find.populate('owner');
 
     //timeout does not seem to have any effect
     var timeoutInMS = 100;
