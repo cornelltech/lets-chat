@@ -221,7 +221,9 @@ module.exports = function() {
                   var userMap = new Map();
 
                   users.forEach(function(user) {
-                    return userMap.set(user._id.toString(), user);
+                    console.log('setting key', user._id.toString())
+                    console.log('setting user', user)
+                    userMap.set(user._id.toString(), user);
                   });
 
                   console.log('the user map is ')
@@ -236,7 +238,9 @@ module.exports = function() {
                     room.participants = [];
 
                     participants.forEach(function(participant_id) {
-                      room.participants.push(userMap.get(participant_id.toString()))
+                      var participant = userMap.get(participant_id.toString())
+                      console.log('adding participant', participant)
+                      room.participants.push(participant)
                     });
 
                     console.log('setting participants to', room.participants)
