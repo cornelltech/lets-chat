@@ -232,31 +232,21 @@ module.exports = function() {
                   })
 
                   var mappedRooms = filteredRooms.map(function(room) {
+                      return room.toJSON(req.user);
+                  });
 
-                    console.log("before participant update",room.participants)
+                  var results = mappedRooms.map(function(room) {
+                    room.owner = userMap.get(room.owner.toString()).uid;
                     var participants = room.participants;
                     room.participants = [];
 
                     participants.forEach(function(participant_id) {
                       var participant = userMap.get(participant_id.toString())
                       console.log('adding participant', participant)
-                      room.participants.push(participant)
+                      room.participants.push(participant.uid)
                     });
-
-                    console.log('setting participants to', room.participants)
-                    room.owner = userMap.get(room.owner.toString())
-
-                    console.log('setting owner to', room.owner)
-
-                    console.log('returning updated room', room);
-
                     return room;
                   })
-                  console.log('mapped rooms', mappedRooms)
-
-                  var results = mappedRooms.map(function(room) {
-                      return room.toJSON(req.user);
-                  });
 
                   console.log('sending response with count', results.length)
                   res.json(results);
