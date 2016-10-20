@@ -202,7 +202,7 @@ module.exports = function() {
                 //ALL users, then create a map to do an in memory lookup
 
                 var usersOptions = {
-                  take: 10
+                  take: 500
                 };
                 console.log('calling core.users.list with options', usersOptions)
                 core.users.list(usersOptions, function(err, users) {
