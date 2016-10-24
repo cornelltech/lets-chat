@@ -68,7 +68,7 @@ MessageManager.prototype.list = function(options, cb) {
     options = helpers.sanitizeQuery(options, {
         defaults: {
             reverse: true,
-            take: 500
+            take: 50
         },
         maxTake: 5000
     });
